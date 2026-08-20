@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pusat Pelayanan Mahasiswa - FEBI UIN Kendari</title>
+    
+    <!-- Mengimpor Font 'Poppins' dari Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Mengimpor FontAwesome untuk Ikon Keren -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- RESET & BASE STYLE --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f4f8; /* Latar belakang abu-abu kebiruan yang elegan */
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        /* --- WRAPPER UTAMA --- */
+        .main-wrapper {
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        /* --- STYLE HEADER --- */
+        .header-container {
+            background: linear-gradient(135deg, #1a3644 0%, #11222b 100%); /* Gradien biru gelap elegan */
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 30px rgba(26, 54, 68, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Ornamen Lingkaran Abstrak di Header (Opsional untuk estetika) */
+        .header-container::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+        }
+        .header-container::after {
+            content: '';
+            position: absolute;
+            bottom: -80px;
+            right: -20px;
+            width: 200px;
+            height: 200px;
+            background: rgba(251, 192, 45, 0.05);
+            border-radius: 50%;
+        }
+
+        .header-title {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-subtitle {
+            margin: 10px 0 0 0;
+            font-size: 18px;
+            color: #fbc02d; /* Warna emas */
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* --- STYLE CONTAINER TOMBOL --- */
+        .menu-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        /* --- STYLE TOMBOL (MODERN ELEGANT) --- */
+        .menu-btn {
+            background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+            color: #1a3644;
+            text-decoration: none;
+            padding: 20px 24px;
+            border-radius: 16px;
+            font-weight: 600;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.04);
+            border-left: 6px solid #fbc02d; /* Garis aksen emas di sebelah kiri */
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Menambahkan ikon sebelum teks menggunakan pseudo-element */
+        .menu-btn::before {
+            content: '\f15c'; /* Kode unicode FontAwesome untuk ikon file/dokumen */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            margin-right: 15px;
+            font-size: 20px;
+            color: #fbc02d;
+            transition: all 0.3s ease;
+        }
+
+        /* Efek Hover (Saat disentuh) */
+        .menu-btn:hover {
+            transform: translateY(-5px); /* Efek melayang */
+            box-shadow: 0 15px 25px rgba(26, 54, 68, 0.1);
+            background: linear-gradient(135deg, #fbc02d 0%, #f9a825 100%); /* Berubah jadi emas */
+            color: #ffffff;
+            border-left: 6px solid #1a3644;
+        }
+
+        .menu-btn:hover::before {
+            color: #ffffff;
+        }
+
+        /* Efek Active (Saat diklik) */
+        .menu-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+        }
+
+        /* --- RESPONSIVITAS UNTUK HP --- */
+        @media (max-width: 600px) {
+            .header-title {
+                font-size: 22px;
+            }
+            .header-subtitle {
+                font-size: 14px;
+            }
+            .menu-container {
+                grid-template-columns: 1fr; /* 1 kolom penuh di layar sempit */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-wrapper">
+        <!-- HEADER -->
+        <div class="header-container">
+            <h1 class="header-title">Pusat Pelayanan Mahasiswa</h1>
+            <p class="header-subtitle">FEBI UIN Kendari</p>
+        </div>
+
+        <!-- DAFTAR TOMBOL LAYANAN -->
+        <div class="menu-container">
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSf7VUpRvS2X1OIYwT3G5BSjygAtDEEjs58eL2oi6PUG4YlUNg/viewform?usp=header" target="_blank" class="menu-btn">Suket Aktif Kuliah</a>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSe_7V0Wsulo-emSUk9ZDDDbQlJFDy3QdvLkRZdVcHowBotZbw/viewform?usp=header" target="_blank" class="menu-btn">Kartu Tanda Mahasiswa</a>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSek2TudlGpOn2xOmrhZLw6LRoe-tHj_xdjkjcdZONsFN2VzUA/viewform?usp=header" target="_blank" class="menu-btn">Suket Lulus</a>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSfg5jECulPzBJoiD7iOBVHOG0y0flSOuwvJd52fVYUWz_kPwQ/viewform?usp=header" target="_blank" class="menu-btn">Heregistrasi</a>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSfDyBnaFoE495a_2e4I9ORQw2RjzdlJHkZOvBUxqrRwN5r02w/viewform?usp=header" target="_blank" class="menu-btn">Suket Berprestasi</a>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSeDF0soQYx-crDjjJ1p9GNPRDc79nbWL2a1ycFZ3A3dTjuXTw/viewform?usp=header" target="_blank" class="menu-btn">Suket Rekom Wadek III</a>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLScpJxUPDHvym0O8m79zFkSUX8bTMGaljkdLkXcWHYNXwYRyqQ/viewform?usp=header" target="_blank" class="menu-btn">Suket Tidak Menerima Bantuan</a>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSd2vJ_eNao1Zr1rsS2OKIyDAp2zt761E_QpT6XVvQui8kONlw/viewform?usp=header" target="_blank" class="menu-btn">Suket Tidak Sedang Menjalani Sanksi</a>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSdNn_PtXCuRTNdiAWLEqIa43v9y_FElc7NRz3pROQJmZT4l3A/viewform?usp=header" target="_blank" class="menu-btn">Suket Izin Penelitian</a>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSchIgZPea_xzsE2vj8aSIIJVVDJNKhZbUFnjV62PiDQsaQpJQ/viewform?fbzx=-3873288049208554221" target="_blank" class="menu-btn">Suket Pra-Penelitian</a>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSdTeAD58e0eujdvv-xNTktNV6l6myaFGqcQ12FvRR_uW3Fiag/viewform?usp=header" target="_blank" class="menu-btn">SK Pembimbing</a>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLScRAbkyd1-vDDFllKR5YcjHsM_P6nOMK_7HjZDc7WspNnzKWA/viewform?usp=header" target="_blank" class="menu-btn">Ujian Proposal</a>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSckPFGqHiF8-95ZFwTghnylm3rbZXap9QBMOKo01b4eB_K22w/viewform?usp=header" target="_blank" class="menu-btn">Ujian Hasil</a>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSdtAVovghhCkmHAgfnpy9rovSKM198P1NvcXVYt5YnhEpOfYg/viewform?usp=header" target="_blank" class="menu-btn">Ujian SKRIPSI</a>
+        </div>
+    </div>
+
+</body>
+</html>
