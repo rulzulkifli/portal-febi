@@ -93,6 +93,43 @@
             z-index: 1;
         }
 
+        /* --- STYLE DASHBOARD STATUS MAHASISWA --- */
+        .status-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+        .status-card {
+            background: #ffffff;
+            border-left: 4px solid #fbc02d;
+            border-radius: 12px;
+            padding: 16px 18px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.04);
+        }
+        .status-card .angka {
+            font-size: 30px;
+            font-weight: 700;
+            color: #1a3644;
+        }
+        .status-card .label {
+            font-size: 13px;
+            color: #555;
+            margin-top: 4px;
+        }
+        .status-loading {
+            grid-column: 1 / -1;
+            text-align: center;
+            color: #777;
+            padding: 10px 0;
+        }
+        .status-updated {
+            grid-column: 1 / -1;
+            font-size: 11px;
+            color: #999;
+            text-align: right;
+        }
+
         /* --- STYLE CONTAINER TOMBOL --- */
         .menu-container {
             display: grid;
@@ -172,6 +209,11 @@
             <p class="header-subtitle">FEBI UIN Kendari</p>
         </div>
 
+        <!-- DASHBOARD STATUS MAHASISWA (PROPOSAL / HASIL / SKRIPSI) -->
+        <div id="status-mahasiswa" class="status-container">
+            <p class="status-loading">Memuat data status mahasiswa...</p>
+        </div>
+
         <!-- DAFTAR TOMBOL LAYANAN -->
         <div class="menu-container">
             <a href="https://docs.google.com/forms/d/e/1FAIpQLSf7VUpRvS2X1OIYwT3G5BSjygAtDEEjs58eL2oi6PUG4YlUNg/viewform?usp=header" target="_blank" class="menu-btn">Suket Aktif Kuliah</a>
@@ -190,6 +232,42 @@
             <a href="https://docs.google.com/forms/d/e/1FAIpQLSdtAVovghhCkmHAgfnpy9rovSKM198P1NvcXVYt5YnhEpOfYg/viewform?usp=header" target="_blank" class="menu-btn">Ujian SKRIPSI</a>
         </div>
     </div>
+
+    <script>
+        // URL Apps Script Web App hasil deploy Kakak (ID Penerapan: AKfycbxgX5mh4othn9rjEJd9CEl0Dll_rE-TymgQM70TmpKqNg6uaX9YhYHx5P7EZnCMWhVTw)
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxgX5mh4othn9rjEJd9CEl0Dll_rE-TymgQM70TmpKqNg6uaX9YhYHx5P7EZnCMWhVTw/exec';
+
+        fetch(SCRIPT_URL)
+            .then(res => res.json())
+            .then(json => {
+                const container = document.getElementById('status-mahasiswa');
+                if (json.error) {
+                    container.innerHTML = '<p class="status-loading">' + json.error + '</p>';
+                    return;
+                }
+
+                let html = '';
+                json.data.forEach(item => {
+                    html += `
+                        <div class="status-card">
+                            <div class="angka">${item.jumlah}</div>
+                            <div class="label">${item.kategori}</div>
+                        </div>`;
+                });
+
+                if (json.updatedAt) {
+                    const tgl = new Date(json.updatedAt).toLocaleString('id-ID');
+                    html += `<div class="status-updated">Diperbarui: ${tgl}</div>`;
+                }
+
+                container.innerHTML = html;
+            })
+            .catch(err => {
+                document.getElementById('status-mahasiswa').innerHTML =
+                    '<p class="status-loading">Gagal memuat data status mahasiswa.</p>';
+                console.error(err);
+            });
+    </script>
 
 </body>
 </html>
