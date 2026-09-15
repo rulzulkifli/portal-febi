@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pusat Pelayanan Mahasiswa - FEBI UIN Kendari</title>
-    
+
     <!-- Mengimpor Font 'Poppins' dari Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <!-- Mengimpor FontAwesome untuk Ikon Keren -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -43,8 +43,6 @@
             border-radius: 20px;
             margin-bottom: 40px;
             box-shadow: 0 15px 30px rgba(26, 54, 68, 0.2);
-            position: relative;
-            overflow: hidden;
         }
 
         .header-title {
@@ -62,6 +60,15 @@
             font-weight: 500;
             letter-spacing: 2px;
             text-transform: uppercase;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a3644;
+            margin-bottom: 15px;
+            border-left: 4px solid #fbc02d;
+            padding-left: 10px;
         }
 
         /* --- DASHBOARD STATUS --- */
@@ -101,14 +108,36 @@
             color: #777;
             padding: 10px 0;
         }
-        .status-updated {
-            grid-column: 1 / -1;
-            font-size: 11px;
-            color: #999;
-            text-align: right;
+
+        /* --- TABEL REKAP DOSEN PENGUJI --- */
+        .dosen-section {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.04);
+            margin-bottom: 40px;
+        }
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+        .dosen-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        .dosen-table th, .dosen-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+        }
+        .dosen-table th {
+            background: #1a3644;
+            color: white;
+            font-weight: 600;
         }
 
-        /* --- MODAL POPUP DETAIL MAHASISWA --- */
+        /* --- MODAL POPUP --- */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -149,70 +178,22 @@
             justify-content: space-between;
             align-items: center;
         }
-        .modal-header h3 {
-            font-size: 16px;
-            font-weight: 600;
-        }
-        .modal-close {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 20px;
-            cursor: pointer;
-        }
+        .modal-header h3 { font-size: 16px; font-weight: 600; }
+        .modal-close { background: none; border: none; color: white; font-size: 20px; cursor: pointer; }
         
-        /* Tombol Aksi di dalam Modal */
-        .modal-actions {
-            padding: 15px 20px 0 20px;
-            display: flex;
-            gap: 10px;
-        }
+        .modal-actions { padding: 15px 20px 0 20px; display: flex; gap: 10px; }
         .btn-action {
-            background-color: #f4f6f8;
-            border: 1px solid #dcdcdc;
-            padding: 8px 14px;
-            border-radius: 8px;
-            font-size: 13px;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 500;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            color: #1a3644;
-            transition: background 0.2s;
+            background-color: #f4f6f8; border: 1px solid #dcdcdc; padding: 8px 14px;
+            border-radius: 8px; font-size: 13px; font-family: 'Poppins', sans-serif;
+            font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; color: #1a3644;
         }
-        .btn-action:hover {
-            background-color: #e2e8f0;
-        }
-        .btn-action.excel {
-            color: #0d9488;
-            border-color: #99f6e4;
-            background-color: #f0fdfa;
-        }
-        .btn-action.excel:hover {
-            background-color: #ccfbf1;
-        }
+        .btn-action:hover { background-color: #e2e8f0; }
+        .btn-action.excel { color: #0d9488; border-color: #99f6e4; background-color: #f0fdfa; }
 
-        .modal-body {
-            padding: 15px 20px 20px 20px;
-            overflow-y: auto;
-        }
-        .student-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-        }
-        .student-table th, .student-table td {
-            padding: 10px 12px;
-            border-bottom: 1px solid #eee;
-            text-align: left;
-        }
-        .student-table th {
-            background: #f9fafb;
-            color: #1a3644;
-            font-weight: 600;
-        }
+        .modal-body { padding: 15px 20px 20px 20px; overflow-y: auto; }
+        .student-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        .student-table th, .student-table td { padding: 10px 12px; border-bottom: 1px solid #eee; text-align: left; }
+        .student-table th { background: #f9fafb; color: #1a3644; font-weight: 600; }
 
         /* --- DAFTAR TOMBOL LAYANAN --- */
         .menu-container {
@@ -222,41 +203,21 @@
         }
         .menu-btn {
             background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
-            color: #1a3644;
-            text-decoration: none;
-            padding: 20px 24px;
-            border-radius: 16px;
-            font-weight: 600;
-            font-size: 15px;
-            display: flex;
-            align-items: center;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.04);
-            border-left: 6px solid #fbc02d;
-            transition: all 0.3s ease;
+            color: #1a3644; text-decoration: none; padding: 20px 24px;
+            border-radius: 16px; font-weight: 600; font-size: 15px;
+            display: flex; align-items: center; box-shadow: 0 10px 20px rgba(0,0,0,0.04);
+            border-left: 6px solid #fbc02d; transition: all 0.3s ease;
         }
         .menu-btn::before {
-            content: '\f15c';
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            margin-right: 15px;
-            font-size: 20px;
-            color: #fbc02d;
+            content: '\f15c'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
+            margin-right: 15px; font-size: 20px; color: #fbc02d;
         }
         .menu-btn:hover {
             transform: translateY(-5px);
             background: linear-gradient(135deg, #fbc02d 0%, #f9a825 100%);
-            color: #ffffff;
-            border-left: 6px solid #1a3644;
+            color: #ffffff; border-left: 6px solid #1a3644;
         }
-        .menu-btn:hover::before {
-            color: #ffffff;
-        }
-
-        @media (max-width: 600px) {
-            .header-title { font-size: 22px; }
-            .header-subtitle { font-size: 14px; }
-            .menu-container { grid-template-columns: 1fr; }
-        }
+        .menu-btn:hover::before { color: #ffffff; }
     </style>
 </head>
 <body>
@@ -269,11 +230,36 @@
         </div>
 
         <!-- DASHBOARD STATUS MAHASISWA -->
+        <h2 class="section-title">Status Pengajuan Mahasiswa</h2>
         <div id="status-mahasiswa" class="status-container">
             <p class="status-loading">Memuat data status mahasiswa...</p>
         </div>
 
+        <!-- REKAP DOSEN PENGUJI & HONOR -->
+        <h2 class="section-title">Rekap Beban Menguji Dosen & Honor</h2>
+        <div class="dosen-section">
+            <div class="table-responsive">
+                <table class="dosen-table" id="dosenTable">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Nama Dosen</th>
+                            <th>Ketua</th>
+                            <th>Sekretaris</th>
+                            <th>Anggota</th>
+                            <th>Total</th>
+                            <th>Daftar Mahasiswa Diuji</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dosenTableBody">
+                        <tr><td colspan="7" style="text-align: center; color: #777;">Memuat data dosen penguji...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <!-- DAFTAR TOMBOL LAYANAN -->
+        <h2 class="section-title">Formulir Layanan Akademik</h2>
         <div class="menu-container">
             <a href="https://docs.google.com/forms/d/e/1FAIpQLSf7VUpRvS2X1OIYwT3G5BSjygAtDEEjs58eL2oi6PUG4YlUNg/viewform?usp=header" target="_blank" class="menu-btn">Suket Aktif Kuliah</a>
             <a href="https://docs.google.com/forms/d/e/1FAIpQLSe_7V0Wsulo-emSUk9ZDDDbQlJFDy3QdvLkRZdVcHowBotZbw/viewform?usp=header" target="_blank" class="menu-btn">Kartu Tanda Mahasiswa</a>
@@ -292,20 +278,17 @@
         </div>
     </div>
 
-    <!-- MODAL POPUP -->
+    <!-- MODAL POPUP MAHASISWA -->
     <div id="detailModal" class="modal-overlay">
         <div class="modal-box">
             <div class="modal-header">
                 <h3 id="modalTitle">Daftar Mahasiswa</h3>
                 <button class="modal-close" onclick="closeModal()">&times;</button>
             </div>
-            
-            <!-- Tombol Cetak & Ekspor Excel -->
             <div class="modal-actions">
                 <button class="btn-action" onclick="printModalData()"><i class="fa-solid fa-print"></i> Cetak</button>
                 <button class="btn-action excel" onclick="exportModalToExcel()"><i class="fa-solid fa-file-excel"></i> Ekspor Excel</button>
             </div>
-
             <div class="modal-body">
                 <table class="student-table" id="modalTable">
                     <thead>
@@ -316,9 +299,7 @@
                             <th>Tanggal Ujian</th>
                         </tr>
                     </thead>
-                    <tbody id="modalTableBody">
-                        <!-- Data akan dimasukkan lewat JS -->
-                    </tbody>
+                    <tbody id="modalTableBody"></tbody>
                 </table>
             </div>
         </div>
@@ -326,10 +307,13 @@
 
     <script>
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxbgX5mh4othn9rjEJd9CEl0DlI_rE-TymgQM70TmpKqNg6uaX9YhYHx5P7EZnCMWhVTw/exec';
+        // Ganti URL di bawah ini dengan URL Web App dari Spreadsheet Rekap Honor Dosen Kakak:
+        const DOSEN_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby9BAkbhmcioOdrL50u2sADVgo_qmoSAuQRO-IRLRLEMgnvEFZthZg4n62ytDzDEE4d_w/exec';
 
         let globalData = [];
         let activeCategoryName = "";
 
+        // 1. Fetch Data Status Mahasiswa
         fetch(WEB_APP_URL)
             .then(res => res.json())
             .then(response => {
@@ -338,10 +322,8 @@
                     container.innerHTML = `<p class="status-loading">${response.error}</p>`;
                     return;
                 }
-
                 globalData = response.data;
                 let html = '';
-
                 globalData.forEach((item, index) => {
                     html += `
                         <div class="status-card" onclick="openDetail(${index})">
@@ -349,43 +331,48 @@
                             <div class="label">${item.kategori} <i class="fa-solid fa-circle-info" style="font-size: 11px; color: #888;"></i></div>
                         </div>`;
                 });
-
-                if (response.updatedAt) {
-                    html += `<div class="status-updated">Diperbarui: ${new Date(response.updatedAt).toLocaleString('id-ID')}</div>`;
-                }
-
                 container.innerHTML = html;
+            });
+
+        // 2. Fetch Data Rekap Dosen Penguji
+        fetch(DOSEN_WEB_APP_URL)
+            .then(res => res.json())
+            .then(response => {
+                const tbody = document.getElementById('dosenTableBody');
+                if (!response.data || response.data.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: #777;">Belum ada data dosen penguji.</td></tr>`;
+                    return;
+                }
+                let rows = '';
+                response.data.forEach((dosen, idx) => {
+                    rows += `
+                        <tr>
+                            <td>${idx + 1}</td>
+                            <td><strong>${dosen.namaDosen}</strong></td>
+                            <td>${dosen.jumlahKetua}</td>
+                            <td>${dosen.jumlahSekretaris}</td>
+                            <td>${dosen.jumlahAnggota}</td>
+                            <td><strong>${dosen.totalMenguji}</strong></td>
+                            <td style="font-size: 12px; color: #555;">${dosen.rincianMahasiswa}</td>
+                        </tr>`;
+                });
+                tbody.innerHTML = rows;
             })
             .catch(err => {
-                document.getElementById('status-mahasiswa').innerHTML =
-                    '<p class="status-loading">Gagal memuat data status mahasiswa.</p>';
-                console.error(err);
+                document.getElementById('dosenTableBody').innerHTML = `<tr><td colspan="7" style="text-align: center; color: #e53e3e;">Gagal memuat rekap dosen. Pastikan URL Web App sudah benar.</td></tr>`;
             });
 
         function openDetail(index) {
             const item = globalData[index];
             if (!item) return;
-
             activeCategoryName = item.kategori;
             document.getElementById('modalTitle').innerText = `${item.kategori} (${item.jumlah} Orang)`;
-            
             const tbody = document.getElementById('modalTableBody');
-            if (!item.detail || item.detail.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #777;">Tidak ada data mahasiswa pada kategori ini.</td></tr>`;
-            } else {
-                let rows = '';
-                item.detail.forEach((mhs, idx) => {
-                    rows += `
-                        <tr>
-                            <td>${idx + 1}</td>
-                            <td>'${mhs.nim}</td>
-                            <td>${mhs.nama}</td>
-                            <td>${mhs.tglStr}</td>
-                        </tr>`;
-                });
-                tbody.innerHTML = rows;
-            }
-
+            let rows = '';
+            item.detail.forEach((mhs, idx) => {
+                rows += `<tr><td>${idx + 1}</td><td>'${mhs.nim}</td><td>${mhs.nama}</td><td>${mhs.tglStr}</td></tr>`;
+            });
+            tbody.innerHTML = rows;
             document.getElementById('detailModal').classList.add('active');
         }
 
@@ -393,53 +380,38 @@
             document.getElementById('detailModal').classList.remove('active');
         }
 
-        // Fungsi Cetak Data dalam Modal
         function printModalData() {
             const tableHTML = document.getElementById('modalTable').outerHTML;
             const title = document.getElementById('modalTitle').innerText;
-            
             const win = window.open('', '', 'height=700,width=900');
-            win.document.write('<html><head><title>Cetak Data - ' + title + '</title>');
+            win.document.write('<html><head><title>Cetak - ' + title + '</title>');
             win.document.write('<style>body{font-family:Poppins,sans-serif;padding:20px;}table{width:100%;border-collapse:collapse;margin-top:20px;}th,td{border:1px solid #ddd;padding:8px 12px;text-align:left;font-size:12px;}th{background-color:#1a3644;color:white;}</style>');
-            win.document.write('</head><body>');
-            win.document.write('<h2>Pusat Pelayanan Mahasiswa - FEBI UIN Kendari</h2>');
-            win.document.write('<h3>' + title + '</h3>');
-            win.document.write(tableHTML);
-            win.document.write('</body></html>');
+            win.document.write('</head><body><h2>Pusat Pelayanan Mahasiswa - FEBI UIN Kendari</h2><h3>' + title + '</h3>' + tableHTML + '</body></html>');
             win.document.close();
             win.print();
         }
 
-        // Fungsi Ekspor ke Format Excel (CSV)
         function exportModalToExcel() {
             const table = document.getElementById('modalTable');
             let csv = [];
             for (let i = 0; i < table.rows.length; i++) {
                 let row = [], cols = table.rows[i].querySelectorAll("td, th");
                 for (let j = 0; j < cols.length; j++) {
-                    // Bersihkan tanda petik atau format string tambahan
                     let data = cols[j].innerText.replace(/"/g, '""');
                     row.push('"' + data + '"');
                 }
                 csv.push(row.join(","));
             }
-            
             let csvFile = new Blob([csv.join("\n")], { type: "text/csv;charset=utf-8;" });
             let downloadLink = document.createElement("a");
             downloadLink.download = `Data_${activeCategoryName.replace(/[^a-zA-Z0-9]/g, '_')}.csv`;
             downloadLink.href = window.URL.createObjectURL(csvFile);
-            downloadLink.style.display = "none";
-            document.body.appendChild(downloadLink);
             downloadLink.click();
-            document.body.removeChild(downloadLink);
         }
 
-        // Tutup modal jika mengklik area gelap di luar kotak modal
         window.onclick = function(event) {
             const modal = document.getElementById('detailModal');
-            if (event.target === modal) {
-                closeModal();
-            }
+            if (event.target === modal) closeModal();
         }
     </script>
 </body>
