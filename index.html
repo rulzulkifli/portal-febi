@@ -234,30 +234,43 @@
     </div>
 
     <script>
-        // URL Apps Script Web App hasil deploy Kakak (ID Penerapan: AKfycbxgX5mh4othn9rjEJd9CEl0Dll_rE-TymgQM70TmpKqNg6uaX9YhYHx5P7EZnCMWhVTw)
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxgX5mh4othn9rjEJd9CEl0Dll_rE-TymgQM70TmpKqNg6uaX9YhYHx5P7EZnCMWhVTw/exec';
+        // URL publik hasil "Publikasikan ke web" dari tab Dashboard Status
+        // (format CSV, jadi tidak lewat Apps Script Web App -- menghindari
+        // pembatasan CORS/API dari akun Google Workspace institusi).
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTHpNy7Ikq_H0jIBefwzvwN3IjbJAPaO9vZ3kziCt1maz1Fi9eWdjK4OnMMdLahQkCXKxbtH798E8KD/pub?gid=1600537001&single=true&output=csv';
 
-        fetch(SCRIPT_URL)
-            .then(res => res.json())
-            .then(json => {
+        fetch(CSV_URL)
+            .then(res => res.text())
+            .then(csvText => {
                 const container = document.getElementById('status-mahasiswa');
-                if (json.error) {
-                    container.innerHTML = '<p class="status-loading">' + json.error + '</p>';
-                    return;
-                }
+
+                // Parser CSV sederhana: cukup untuk data kita yang tidak
+                // mengandung koma di dalam teksnya.
+                const baris = csvText
+                    .trim()
+                    .split('\n')
+                    .map(line => line.split(',').map(sel => sel.replace(/^"|"$/g, '').trim()));
+
+                const dataBaris = baris.slice(1); // lewati baris header
 
                 let html = '';
-                json.data.forEach(item => {
+                let terakhirDiperbarui = null;
+
+                dataBaris.forEach(cols => {
+                    const kategori = cols[0];
+                    const jumlah = cols[1];
+                    if (cols[2]) terakhirDiperbarui = cols[2];
+                    if (!kategori) return;
+
                     html += `
                         <div class="status-card">
-                            <div class="angka">${item.jumlah}</div>
-                            <div class="label">${item.kategori}</div>
+                            <div class="angka">${jumlah}</div>
+                            <div class="label">${kategori}</div>
                         </div>`;
                 });
 
-                if (json.updatedAt) {
-                    const tgl = new Date(json.updatedAt).toLocaleString('id-ID');
-                    html += `<div class="status-updated">Diperbarui: ${tgl}</div>`;
+                if (terakhirDiperbarui) {
+                    html += `<div class="status-updated">Diperbarui: ${terakhirDiperbarui}</div>`;
                 }
 
                 container.innerHTML = html;
