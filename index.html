@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* --- RESET & BASE STYLE --- */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -21,7 +20,7 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #f0f4f8; /* Latar belakang abu-abu kebiruan yang elegan */
+            background-color: #f0f4f8;
             color: #333;
             line-height: 1.6;
             min-height: 100vh;
@@ -31,15 +30,13 @@
             padding: 40px 20px;
         }
 
-        /* --- WRAPPER UTAMA --- */
         .main-wrapper {
             width: 100%;
             max-width: 1100px;
         }
 
-        /* --- STYLE HEADER --- */
         .header-container {
-            background: linear-gradient(135deg, #1a3644 0%, #11222b 100%); /* Gradien biru gelap elegan */
+            background: linear-gradient(135deg, #1a3644 0%, #11222b 100%);
             color: white;
             text-align: center;
             padding: 40px 20px;
@@ -50,50 +47,24 @@
             overflow: hidden;
         }
 
-        /* Ornamen Lingkaran Abstrak di Header (Opsional untuk estetika) */
-        .header-container::before {
-            content: '';
-            position: absolute;
-            top: -50px;
-            left: -50px;
-            width: 150px;
-            height: 150px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 50%;
-        }
-        .header-container::after {
-            content: '';
-            position: absolute;
-            bottom: -80px;
-            right: -20px;
-            width: 200px;
-            height: 200px;
-            background: rgba(251, 192, 45, 0.05);
-            border-radius: 50%;
-        }
-
         .header-title {
             margin: 0;
             font-size: 28px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
-            position: relative;
-            z-index: 1;
         }
 
         .header-subtitle {
             margin: 10px 0 0 0;
             font-size: 18px;
-            color: #fbc02d; /* Warna emas */
+            color: #fbc02d;
             font-weight: 500;
             letter-spacing: 2px;
             text-transform: uppercase;
-            position: relative;
-            z-index: 1;
         }
 
-        /* --- STYLE DASHBOARD STATUS MAHASISWA --- */
+        /* --- DASHBOARD STATUS --- */
         .status-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -106,6 +77,13 @@
             border-radius: 12px;
             padding: 16px 18px;
             box-shadow: 0 8px 16px rgba(0,0,0,0.04);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .status-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 20px rgba(0,0,0,0.08);
+            background: #fffdf5;
         }
         .status-card .angka {
             font-size: 30px;
@@ -130,14 +108,84 @@
             text-align: right;
         }
 
-        /* --- STYLE CONTAINER TOMBOL --- */
+        /* --- MODAL POPUP DETAIL MAHASISWA --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-box {
+            background: #ffffff;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        .modal-overlay.active .modal-box {
+            transform: scale(1);
+        }
+        .modal-header {
+            background: #1a3644;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .modal-body {
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .student-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        .student-table th, .student-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+        }
+        .student-table th {
+            background: #f9fafb;
+            color: #1a3644;
+            font-weight: 600;
+        }
+
+        /* --- DAFTAR TOMBOL LAYANAN --- */
         .menu-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 20px;
         }
-
-        /* --- STYLE TOMBOL (MODERN ELEGANT) --- */
         .menu-btn {
             background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
             color: #1a3644;
@@ -148,55 +196,32 @@
             font-size: 15px;
             display: flex;
             align-items: center;
-            justify-content: flex-start;
             box-shadow: 0 10px 20px rgba(0,0,0,0.04);
-            border-left: 6px solid #fbc02d; /* Garis aksen emas di sebelah kiri */
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            position: relative;
-            overflow: hidden;
+            border-left: 6px solid #fbc02d;
+            transition: all 0.3s ease;
         }
-
-        /* Menambahkan ikon sebelum teks menggunakan pseudo-element */
         .menu-btn::before {
-            content: '\f15c'; /* Kode unicode FontAwesome untuk ikon file/dokumen */
+            content: '\f15c';
             font-family: 'Font Awesome 6 Free';
             font-weight: 900;
             margin-right: 15px;
             font-size: 20px;
             color: #fbc02d;
-            transition: all 0.3s ease;
         }
-
-        /* Efek Hover (Saat disentuh) */
         .menu-btn:hover {
-            transform: translateY(-5px); /* Efek melayang */
-            box-shadow: 0 15px 25px rgba(26, 54, 68, 0.1);
-            background: linear-gradient(135deg, #fbc02d 0%, #f9a825 100%); /* Berubah jadi emas */
+            transform: translateY(-5px);
+            background: linear-gradient(135deg, #fbc02d 0%, #f9a825 100%);
             color: #ffffff;
             border-left: 6px solid #1a3644;
         }
-
         .menu-btn:hover::before {
             color: #ffffff;
         }
 
-        /* Efek Active (Saat diklik) */
-        .menu-btn:active {
-            transform: translateY(0);
-            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
-        }
-
-        /* --- RESPONSIVITAS UNTUK HP --- */
         @media (max-width: 600px) {
-            .header-title {
-                font-size: 22px;
-            }
-            .header-subtitle {
-                font-size: 14px;
-            }
-            .menu-container {
-                grid-template-columns: 1fr; /* 1 kolom penuh di layar sempit */
-            }
+            .header-title { font-size: 22px; }
+            .header-subtitle { font-size: 14px; }
+            .menu-container { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -209,7 +234,7 @@
             <p class="header-subtitle">FEBI UIN Kendari</p>
         </div>
 
-        <!-- DASHBOARD STATUS MAHASISWA (PROPOSAL / HASIL / SKRIPSI) -->
+        <!-- DASHBOARD STATUS MAHASISWA -->
         <div id="status-mahasiswa" class="status-container">
             <p class="status-loading">Memuat data status mahasiswa...</p>
         </div>
@@ -233,44 +258,59 @@
         </div>
     </div>
 
+    <!-- MODAL POPUP -->
+    <div id="detailModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="modalTitle">Daftar Mahasiswa</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <table class="student-table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>NIM</th>
+                            <th>Nama Lengkap</th>
+                            <th>Tanggal Ujian</th>
+                        </tr>
+                    </thead>
+                    <tbody id="modalTableBody">
+                        <!-- Data akan dimasukkan lewat JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // URL publik hasil "Publikasikan ke web" dari tab Dashboard Status
-        // (format CSV, jadi tidak lewat Apps Script Web App -- menghindari
-        // pembatasan CORS/API dari akun Google Workspace institusi).
-        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTHpNy7Ikq_H0jIBefwzvwN3IjbJAPaO9vZ3kziCt1maz1Fi9eWdjK4OnMMdLahQkCXKxbtH798E8KD/pub?gid=1600537001&single=true&output=csv';
+        // Ganti URL ini dengan URL Web App Apps Script Kakak yang baru (berakhiran /exec)
+        const WEB_APP_URL = 'ISI_URL_WEB_APP_APPS_SCRIPT_KAKAK_DI_SINI';
 
-        fetch(CSV_URL)
-            .then(res => res.text())
-            .then(csvText => {
+        let globalData = [];
+
+        fetch(WEB_APP_URL)
+            .then(res => res.json())
+            .then(response => {
                 const container = document.getElementById('status-mahasiswa');
+                if (response.error) {
+                    container.innerHTML = `<p class="status-loading">${response.error}</p>`;
+                    return;
+                }
 
-                // Parser CSV sederhana: cukup untuk data kita yang tidak
-                // mengandung koma di dalam teksnya.
-                const baris = csvText
-                    .trim()
-                    .split('\n')
-                    .map(line => line.split(',').map(sel => sel.replace(/^"|"$/g, '').trim()));
-
-                const dataBaris = baris.slice(1); // lewati baris header
-
+                globalData = response.data;
                 let html = '';
-                let terakhirDiperbarui = null;
 
-                dataBaris.forEach(cols => {
-                    const kategori = cols[0];
-                    const jumlah = cols[1];
-                    if (cols[2]) terakhirDiperbarui = cols[2];
-                    if (!kategori) return;
-
+                globalData.forEach((item, index) => {
                     html += `
-                        <div class="status-card">
-                            <div class="angka">${jumlah}</div>
-                            <div class="label">${kategori}</div>
+                        <div class="status-card" onclick="openDetail(${index})">
+                            <div class="angka">${item.jumlah}</div>
+                            <div class="label">${item.kategori} <i class="fa-solid fa-circle-info" style="font-size: 11px; color: #888;"></i></div>
                         </div>`;
                 });
 
-                if (terakhirDiperbarui) {
-                    html += `<div class="status-updated">Diperbarui: ${terakhirDiperbarui}</div>`;
+                if (response.updatedAt) {
+                    html += `<div class="status-updated">Diperbarui: ${new Date(response.updatedAt).toLocaleString('id-ID')}</div>`;
                 }
 
                 container.innerHTML = html;
@@ -280,7 +320,44 @@
                     '<p class="status-loading">Gagal memuat data status mahasiswa.</p>';
                 console.error(err);
             });
-    </script>
 
+        function openDetail(index) {
+            const item = globalData[index];
+            if (!item) return;
+
+            document.getElementById('modalTitle').innerText = `${item.kategori} (${item.jumlah} Orang)`;
+            
+            const tbody = document.getElementById('modalTableBody');
+            if (!item.detail || item.detail.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #777;">Tidak ada data mahasiswa pada kategori ini.</td></tr>`;
+            } else {
+                let rows = '';
+                item.detail.forEach((mhs, idx) => {
+                    rows += `
+                        <tr>
+                            <td>${idx + 1}</td>
+                            <td>${mhs.nim}</td>
+                            <td>${mhs.nama}</td>
+                            <td>${mhs.tglStr}</td>
+                        </tr>`;
+                });
+                tbody.innerHTML = rows;
+            }
+
+            document.getElementById('detailModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('detailModal').classList.remove('active');
+        }
+
+        // Tutup modal jika mengklik area gelap di luar kotak modal
+        window.onclick = function(event) {
+            const modal = document.getElementById('detailModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
 </body>
 </html>
