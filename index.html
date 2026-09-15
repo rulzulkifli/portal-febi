@@ -452,25 +452,33 @@
             document.getElementById('detailModal').classList.add('active');
         }
 
-        // Modal Detail untuk Rincian Menguji Dosen
+        // Modal Detail untuk Rincian Menguji Dosen (Tampil Rapi Berkolom)
         function openDosenDetail(index) {
             const dosen = globalDosenData[index];
             if (!dosen) return;
             activeCategoryName = `Dosen_${dosen.namaDosen}`;
-            document.getElementById('modalTitle').innerText = `Rincian Mahasiswa Diuji: ${dosen.namaDosen}`;
+            document.getElementById('modalTitle').innerText = `Rincian Mahasiswa Diuji: ${dosen.namaDosen} (${dosen.totalMenguji} Orang)`;
             
-            document.getElementById('modalTableHead').innerHTML = `<th>No</th><th>Rincian Mahasiswa & Peran</th>`;
+            // Mengatur kepala tabel modal agar rapi berkolom
+            document.getElementById('modalTableHead').innerHTML = `
+                <th>No</th>
+                <th>Nama Mahasiswa</th>
+                <th>Peran & Jenis Ujian</th>
+            `;
             
             const tbody = document.getElementById('modalTableBody');
             let rows = '';
-            // Asumsi rincianMahasiswa berbentuk string yang dipisah koma atau baris baru
-            let listMhs = dosen.rincianMahasiswa ? dosen.rincianMahasiswa.split(/,|\n/) : [];
             
-            if (listMhs.length === 0 || dosen.rincianMahasiswa === "") {
-                rows = `<tr><td colspan="2" style="text-align: center; color: #777;">Tidak ada rincian mahasiswa.</td></tr>`;
+            if (!dosen.detail || dosen.detail.length === 0) {
+                rows = `<tr><td colspan="3" style="text-align: center; color: #777;">Tidak ada rincian mahasiswa.</td></tr>`;
             } else {
-                listMhs.forEach((mhs, idx) => {
-                    rows += `<tr><td>${idx + 1}</td><td>${mhs.trim()}</td></tr>`;
+                dosen.detail.forEach((mhs, idx) => {
+                    rows += `
+                        <tr>
+                            <td>${idx + 1}</td>
+                            <td><strong>${mhs.nama}</strong></td>
+                            <td>${mhs.peran}</td>
+                        </tr>`;
                 });
             }
             tbody.innerHTML = rows;
