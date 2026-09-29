@@ -177,6 +177,16 @@
         .btn-reset:hover {
             background: #cbd5e1;
         }
+        .filter-info {
+            font-size: 12px;
+            color: #0d9488;
+            font-weight: 500;
+            margin-bottom: 12px;
+            display: none;
+        }
+        .filter-info.active {
+            display: block;
+        }
 
         /* --- DASHBOARD STATUS MAHASISWA --- */
         .status-container {
@@ -271,7 +281,7 @@
         .modal-box {
             background: #ffffff;
             width: 90%;
-            max-width: 650px;
+            max-width: 700px;
             max-height: 85vh;
             border-radius: 16px;
             display: flex;
@@ -294,7 +304,7 @@
         }
         .modal-header h3 { font-size: 16px; font-weight: 600; }
         .modal-close { background: none; border: none; color: white; font-size: 20px; cursor: pointer; }
-        
+
         .modal-actions { padding: 15px 20px 0 20px; display: flex; gap: 10px; }
         .btn-action {
             background-color: #f4f6f8; border: 1px solid #dcdcdc; padding: 8px 14px;
@@ -358,7 +368,7 @@
         <!-- KONTEN TAB 1: MAHASISWA -->
         <div id="tab-mahasiswa" class="tab-content active">
             <h2 class="section-title">Status Pengajuan Mahasiswa</h2>
-            
+
             <!-- Filter Tanggal Mahasiswa -->
             <div class="filter-box">
                 <div class="filter-group">
@@ -399,7 +409,7 @@
         <!-- KONTEN TAB 2: DOSEN -->
         <div id="tab-dosen" class="tab-content">
             <h2 class="section-title">Rekap Beban Menguji Dosen & Honor</h2>
-            
+
             <!-- Filter Tanggal Dosen -->
             <div class="filter-box">
                 <div class="filter-group">
@@ -413,6 +423,8 @@
                 <button class="btn-filter" onclick="filterDosen()"><i class="fa-solid fa-filter"></i> Terapkan Filter</button>
                 <button class="btn-reset" onclick="resetDosenFilter()">Reset</button>
             </div>
+
+            <p id="dosenFilterInfo" class="filter-info"></p>
 
             <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Klik pada baris nama dosen untuk melihat rincian mahasiswa yang diuji.</p>
             <div class="dosen-section">
@@ -463,20 +475,29 @@
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxbgX5mh4othn9rjEJd9CEl0DlI_rE-TymgQM70TmpKqNg6uaX9YhYHx5P7EZnCMWhVTw/exec';
         const DOSEN_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby9BAkbhmcioOdrL50u2sADVgo_qmoSAuQRO-IRLRLEMgnvEFZthZg4n62ytDzDEE4d_w/exec';
 
-        let globalData = [];
-        let globalDosenData = [];
+        let globalData = [];          // data mahasiswa (asli)
+        let currentMhsData = [];      // data mahasiswa yang sedang tampil (setelah filter)
+        let globalDosenData = [];     // data dosen (asli)
+        let currentDosenData = [];    // data dosen yang sedang tampil (setelah filter)
         let activeCategoryName = "";
 
         // Fungsi untuk Berpindah Tab
         function switchTab(tabId, btnElement) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            
+
             document.getElementById(tabId).classList.add('active');
             btnElement.classList.add('active');
         }
 
-        // 1. Fetch Data Status Mahasiswa
+        // Format yyyy-MM-dd -> dd/MM/yyyy untuk tampilan
+        function formatTanggal(tglStr) {
+            if (!tglStr) return '-';
+            const m = String(tglStr).match(/^(\d{4})-(\d{2})-(\d{2})/);
+            return m ? `${m[3]}/${m[2]}/${m[1]}` : tglStr;
+        }
+
+        // ===== 1. DATA STATUS MAHASISWA =====
         fetch(WEB_APP_URL)
             .then(res => res.json())
             .then(response => {
@@ -486,9 +507,13 @@
                 }
                 globalData = response.data;
                 renderMahasiswa(globalData);
+            })
+            .catch(() => {
+                document.getElementById('status-mahasiswa').innerHTML = `<p class="status-loading" style="color:#e53e3e;">Gagal memuat data status mahasiswa.</p>`;
             });
 
         function renderMahasiswa(dataToRender) {
+            currentMhsData = dataToRender;
             const container = document.getElementById('status-mahasiswa');
             let html = '';
             dataToRender.forEach((item, index) => {
@@ -504,8 +529,8 @@
         function filterMahasiswa() {
             let start = document.getElementById('mhsStartDate').value;
             let end = document.getElementById('mhsEndDate').value;
-            
-            if(!start || !end) {
+
+            if (!start || !end) {
                 alert("Harap pilih tanggal 'Dari' dan 'Sampai' terlebih dahulu!");
                 return;
             }
@@ -516,7 +541,6 @@
 
             let filtered = globalData.map(cat => {
                 let filteredDetail = cat.detail.filter(mhs => {
-                    // Asumsi format tanggal di mhs.tglStr bisa di-parse (misal format YYYY-MM-DD atau standar Date)
                     let tglMhs = new Date(mhs.tglStr);
                     return tglMhs >= startDate && tglMhs <= endDate;
                 });
@@ -536,7 +560,7 @@
             renderMahasiswa(globalData);
         }
 
-        // 2. Fetch Data Rekap Dosen Penguji
+        // ===== 2. DATA REKAP DOSEN PENGUJI =====
         fetch(DOSEN_WEB_APP_URL)
             .then(res => res.json())
             .then(response => {
@@ -552,7 +576,14 @@
             });
 
         function renderDosen(dataToRender) {
+            currentDosenData = dataToRender;
             const tbody = document.getElementById('dosenTableBody');
+
+            if (dataToRender.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #777;">Tidak ada data menguji pada periode ini.</td></tr>`;
+                return;
+            }
+
             let rows = '';
             dataToRender.forEach((dosen, idx) => {
                 rows += `
@@ -571,32 +602,61 @@
         function filterDosen() {
             let start = document.getElementById('dosenStartDate').value;
             let end = document.getElementById('dosenEndDate').value;
-            
-            if(!start || !end) {
+
+            if (!start || !end) {
                 alert("Harap pilih tanggal 'Dari' dan 'Sampai' terlebih dahulu!");
                 return;
             }
+            if (start > end) {
+                alert("Tanggal 'Dari' tidak boleh lebih besar dari tanggal 'Sampai'.");
+                return;
+            }
+            if (globalDosenData.length === 0) {
+                alert("Data dosen belum termuat.");
+                return;
+            }
 
-            // Catatan: Jika ingin filter range untuk dosen berjalan penuh berdasarkan tanggal ujian mahasiswanya, 
-            // pastikan backend Apps Script mengirimkan tanggal ujian di dalam array `detail` objek dosen.
-            alert("Fitur filter rentang tanggal untuk rekap dosen akan menyaring rincian mahasiswa berdasarkan periode tanggal ujian.");
+            // Bandingkan sebagai teks yyyy-MM-dd (aman, tanpa masalah zona waktu)
+            const filtered = globalDosenData.map(d => {
+                const detail = (d.detail || [])
+                    .filter(m => m.tglStr && m.tglStr >= start && m.tglStr <= end)
+                    .map((m, i) => ({ ...m, no: i + 1 }));
+
+                const hitung = (peran) => detail.filter(m => (m.peran || '').endsWith('- ' + peran)).length;
+
+                return {
+                    namaDosen: d.namaDosen,
+                    jumlahKetua: hitung('Ketua'),
+                    jumlahSekretaris: hitung('Sekretaris'),
+                    jumlahAnggota: hitung('Anggota'),
+                    totalMenguji: detail.length,
+                    detail: detail
+                };
+            }).filter(d => d.totalMenguji > 0);
+
+            const info = document.getElementById('dosenFilterInfo');
+            info.innerHTML = `<i class="fa-solid fa-filter"></i> Menampilkan data periode ${formatTanggal(start)} s/d ${formatTanggal(end)}`;
+            info.classList.add('active');
+
+            renderDosen(filtered);
         }
 
         function resetDosenFilter() {
             document.getElementById('dosenStartDate').value = '';
             document.getElementById('dosenEndDate').value = '';
+            document.getElementById('dosenFilterInfo').classList.remove('active');
             renderDosen(globalDosenData);
         }
 
-        // Modal Detail untuk Mahasiswa
+        // ===== MODAL DETAIL MAHASISWA =====
         function openStudentDetail(index) {
-            const item = globalData[index];
+            const item = currentMhsData[index];
             if (!item) return;
             activeCategoryName = item.kategori;
             document.getElementById('modalTitle').innerText = `${item.kategori} (${item.jumlah} Orang)`;
-            
+
             document.getElementById('modalTableHead').innerHTML = `<th>No</th><th>NIM</th><th>Nama Lengkap</th><th>Tanggal Ujian</th>`;
-            
+
             const tbody = document.getElementById('modalTableBody');
             let rows = '';
             item.detail.forEach((mhs, idx) => {
@@ -606,24 +666,25 @@
             document.getElementById('detailModal').classList.add('active');
         }
 
-        // Modal Detail untuk Rincian Menguji Dosen (Rapi Berkolom)
+        // ===== MODAL RINCIAN MENGUJI DOSEN =====
         function openDosenDetail(index) {
-            const dosen = globalDosenData[index];
+            const dosen = currentDosenData[index];
             if (!dosen) return;
             activeCategoryName = `Dosen_${dosen.namaDosen}`;
             document.getElementById('modalTitle').innerText = `Rincian Mahasiswa Diuji: ${dosen.namaDosen} (${dosen.totalMenguji} Orang)`;
-            
+
             document.getElementById('modalTableHead').innerHTML = `
                 <th>No</th>
                 <th>Nama Mahasiswa</th>
                 <th>Peran & Jenis Ujian</th>
+                <th>Tanggal</th>
             `;
-            
+
             const tbody = document.getElementById('modalTableBody');
             let rows = '';
-            
+
             if (!dosen.detail || dosen.detail.length === 0) {
-                rows = `<tr><td colspan="3" style="text-align: center; color: #777;">Tidak ada rincian mahasiswa.</td></tr>`;
+                rows = `<tr><td colspan="4" style="text-align: center; color: #777;">Tidak ada rincian mahasiswa.</td></tr>`;
             } else {
                 dosen.detail.forEach((mhs, idx) => {
                     rows += `
@@ -631,6 +692,7 @@
                             <td>${idx + 1}</td>
                             <td><strong>${mhs.nama}</strong></td>
                             <td>${mhs.peran}</td>
+                            <td>${formatTanggal(mhs.tglStr)}</td>
                         </tr>`;
                 });
             }
@@ -664,7 +726,7 @@
                 }
                 csv.push(row.join(","));
             }
-            let csvFile = new Blob([csv.join("\n")], { type: "text/csv;charset=utf-8;" });
+            let csvFile = new Blob(["\ufeff" + csv.join("\n")], { type: "text/csv;charset=utf-8;" });
             let downloadLink = document.createElement("a");
             downloadLink.download = `Data_${activeCategoryName.replace(/[^a-zA-Z0-9]/g, '_')}.csv`;
             downloadLink.href = window.URL.createObjectURL(csvFile);
